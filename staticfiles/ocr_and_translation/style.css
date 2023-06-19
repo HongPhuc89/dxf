@@ -1,0 +1,46 @@
+/**
+ * Highlight any element inside the context
+ * because it can be freely defined
+ */
+.context :not(p) {
+  padding: 0;
+}
+
+.context mark {
+  color:black;
+  background-color:yellow;
+}
+
+
+/**
+ * The following is not related to the plugin
+ */
+body {
+  background: #f5f5f5 !important;
+  height: 100vh !important;
+  width: 100%;
+}
+
+.container {
+  max-width: 700px;
+}
+
+.form-group {
+  margin-bottom: 5px;
+}
+
+.form-group:last-child {
+  margin-bottom: 0;
+}
+
+.form-group label {
+  display: block;
+}
+
+.form-group label.noTransform {
+  text-transform: none;
+}
+
+html {
+  width: 100%;
+}

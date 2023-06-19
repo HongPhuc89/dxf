@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>PwC Transfer Pricing Web Scraper</title>
+    {% load static %}
+    <meta charset="utf-8" />
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        <link rel="icon" type="image/x-icon" href="static/images/pwc-favicon.ico" />
+        <link rel="stylesheet" href="static/css/summarizer.css">
+        <link rel="stylesheet" href="https://pwcappkit-static.azureedge.net/cdn/release/3.0.0/vendor.min.css">
+        <link rel="stylesheet" href="https://pwcappkit-static.azureedge.net/cdn/release/3.0.0/appkit.min.css">
+
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <style>
+    .dropzone {
+        background: white;
+        border-radius: 5px;
+        border: 2px dashed rgb(0, 135, 247);
+        border-image: none;
+        width: 50%;
+      }
+
+    </style>
+    <script>
+    function validURL(str) {
+      var pattern = new RegExp('^(https?:\\/\\/)'+ // protocol
+        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+        '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+        '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+        '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+      return !!pattern.test(str);
+    }
+      $(document).ready(function(){
+        // $('#file_').prop("disabled",false);
+        // $('#add_').prop("disabled",true);
+        //
+        // $("#radio_file").change(function(){
+        //   $('#file_').prop("disabled",false);
+        //   $('#file_').prop("required",true);
+        //   // $('#add_').prop("disabled",true);
+        // })
+        //
+        // $("#radio_type").change(function(){
+        //   $('#file_').prop("disabled",true);
+        //   $('#file_').prop("required",false);
+        //   // $('#add_').prop("disabled",false);
+        // })
+      })
+    </script>
+  </head>
+      <body class="no-outline">
+        <div class="d-flex flex-column a-bg-f5f a-template-container">
+
+            <!-- Notifications sticky bar -->
+            <div class="bar a-notification a-notification-hide a-transition-500ms" data-hide="3">
+                <span class="notification-content">
+                    <span id="notification-text" class="text-left"></span>
+                </span>
+                <div class="a-countdown-wrapper">
+                </div>
+            </div>
+
+            <!-- Header -->
+            <div class="a-header a-hfn-header-container d-flex align-items-center justify-content-between a-px-20">
+                <div class="d-flex align-items-center">
+                    <div class="a-pwc-logo a-md"></div>
+                    <span class="divider a-mx-20"></span>
+                    <div class="font-weight-medium a-nowrap">Transfer Pricing Web Scraper</div>
+                    <span class="divider a-mx-20"></span>
+                    <ul class="d-none d-md-flex menu">
+
+                        <li class="font-weight-medium a-nowrap item active-link"><a href="form_.html">Home</a></li>
+                        <li class="font-weight-medium a-nowrap item active-link"><a href="tutorial.html">Tutorial</a></li>
+
+
+                    </ul>
+                </div>
+                <div class="d-flex align-items-center a-pl-10">
+                    <div class="a-logout d-none d-md-flex">
+                        <button aria-expanded="false" aria-haspopup="true" class="user-name a-bg-primary a-text-white size-24" data-toggle="dropdown">FL</button>
+                        <div class="dropdown-menu dropdown-menu-right a-shadow-sm border-0 a-user-setting-panel-one w-15">
+                            <div class="dropdown-title">WELCOME FIRST LASTNAME</div>
+                            <div class="user-logout">
+                                <button class="sign-out-btn a-btn a-btn-primary a-btn-lg">Log Out</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-sm-flex d-md-none a-logout align-items-center">
+                        <button class="user-name a-bg-primary a-text-white size-24" aria-expanded="false" aria-haspopup="true"data-toggle="dropdown">
+                            <span class="appkiticon icon-menu-outline"></span>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-right a-shadow-sm border-0 a-user-setting-panel-one w-15">
+                            <div class="dropdown-title">WELCOME FIRST LASTNAME</div>
+                            <ul class="user-infor-list">
+                                <li class="user-infor-list-item active-link"><a href="preproc">PwC Transfer Pricing Web Scrapern</a></li>
+
+                            </ul>
+                            <div class="user-logout border-top">
+                                <button class="sign-out-btn a-btn a-btn-primary a-btn-lg">Log Out</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+
+      {% if required %}
+      <div class="alert alert-danger" role="alert">
+        {{ required }}
+      </div>
+      {% endif %}
+
+     <div class="col-12 d-table">
+                            <div class="a-panel a-m-20">
+                                <div class="a-panel-header"><span>First Step: Set Up</span></div>
+                                <div class="a-pb-20 a-pt-10 mw-100-percent overflow-hidden">
+                                    <div class="a-font-16">
+                                        1. Create a Folder in your Google Drive named "full_screenshots".<br>
+
+                                 </div>
+                                </div>
+                            </div>
+                        </div>
+
+            <div class="col-12 d-table">
+                            <div class="a-panel a-m-20">
+                                <div class="a-panel-header"><span>Second Step: File Preparation</span></div>
+                                <div class="a-pb-20 a-pt-10 mw-100-percent overflow-hidden">
+                                    <div class="a-font-16">
+                                        1. Download Company data from your portal of choice.<br>
+                                        2. Create a file containing Company Name, BvD Number and Website Address as per the provided template.<br>
+                                        3. Save File in .txt or .csv file format.<br>
+                                 </div>
+                                </div>
+                            </div>
+                        </div>
+
+            <div class="col-12 d-table">
+                            <div class="a-panel a-m-20">
+                                <div class="a-panel-header"><span>Third Step: Conduct the Scraping</span></div>
+                                <div class="a-pb-20 a-pt-10 mw-100-percent overflow-hidden">
+                                    <div class="a-font-16">
+                                        1. Upload the .csv or .txt file containin the Extracted Websites, Names and BvD Numbers of the companies being researched in the main page.<br>
+                                        2. Assign a name to the output file which will contain the extracted information.<br>
+                                        3. Wait for the process to finish creating screenshots, extracting them and providing the final analytical table.<br>
+                                        4. Use the highlighter option to highlight positively correlated keywords, and negatively correlated keywords with your search/analysis.<br>
+                                        5. All the captured screenshots, along with the finalized table are contained in your Google Drive folder named full_screenshots, folderized based on company names. <br>
+                                 </div>
+                                </div>
+                            </div>
+                        </div>
+            <button class="sign-out-btn a-btn a-btn-primary a-btn-lg" href="input_file.csv" download="Tutorial File">Download Tutorial File</button>
+                            </div>
+                        </div>
+        <div><div class="newPageFooter parbase section">
+
+
+
+
+
+
+
+
+<!-- START Sitemap Footer -->
+    <div class="dpe-component-wrapper glb-footer glb-footer__block--reduced">
+    <div class="container">
+
+
+
+
+
+
+
+
+
+
+
+<!-- Code from old JSP -->
+
+
+
+<!-- Code from old JSP ends -->
+
+
+
+
+
+
+
+
+
+
+<!-- START Copyright statement -->
+<div class="row">
+    <div class="col-xs-12  ">
+        <div class="glb-footer__disclaimer">
+            <div class="row">
+                 <div class="col-md-8 ">
+                                <p>
+                                    © 2023 PwC. All rights reserved. PwC refers to the PwC network and/or one or more of its member firms, each of which is a separate legal entity. Please see <a href="https://www.pwc.com/structure" target="_blank">www.pwc.com/structure</a> for further details.<br>
+                                </p>
+                                <!-- optional disclaimer links -->
+                                <ul class="glb-footer__disclaimer-links" id="pgFooter">
+                                    <li><a href="https://www.pwc.com/al/en/privacy-statement.html" target="_blank">Privacy</a></li>
+                                    <li><a href="https://www.pwc.com/al/en/cookie-information1.html" target="_blank">Cookies policy</a></li>
+                                    <li><a href="https://www.pwc.com/gx/en/site-information/legal-disclaimer.html" target="_blank">Legal</a></li>
+                                </ul>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END Copyright statement -->
+
+<!-- Code from old JSP -->
+
+<!-- Code from old JSP ends -->
+
+
+
+
+	</div>
+</div>
+
+<!-- END Sitemap Footer -->
+
+</div>
+<div class="section"><div class="new">
+        </div>
+</div><div class="iparys_inherited"><div class="footerPar iparsys parsys"></div>
+</div>
+</div>
+    </div>
+
+    <script>
+
+    function remove(element) {
+      // console.log(element.parentElement.children[0].innerHTML);
+      $("#typed_urls").val($("#typed_urls").val().replace(element.parentElement.children[0].innerHTML+';',''));
+      element.parentElement.remove();
+    }
+    function onKey(event){
+       var keyCode = (event.keyCode ? event.keyCode : event.which);
+       if (keyCode == 13) {
+           event.preventDefault();
+           let url = $("#add_").val().replace(/ /g,"");
+           if (validURL(url)){
+             $("#urls").val($("#urls").val()+url+";")
+             document.getElementById("div_add").innerHTML="<div id='div_element' class='p-2 bd-highlight mr-3 mb-3 rounded' style = 'background-color:#f3be26;color:#ffffff'><span id='url_span' class='align-middle'>"+url+"</span><button class='btn' style='background-color:#e88d14;color:#ffffff;' onclick='remove(this)'>×</button></div>"+document.getElementById("div_add").innerHTML;
+             $("#typed_urls").val(url+";"+$("#typed_urls").val())
+           }
+           else{
+             $("#add").val("");
+             alert("Enter a valid url");
+           }
+       }
+       return true;
+    }
+    </script>
+
+  </body>
+</html>

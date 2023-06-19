@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en" dir="ltr" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
+    <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootswatch/3.3.6/sandstone/bootstrap.min.css'>
+    <link rel="stylesheet" href="{% static '/ocr_and_translation/style.css' %}">
+
+    <script src='https://code.jquery.com/jquery-2.2.3.js'></script>
+    <script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js'></script>
+    <script src='https://cdn.rawgit.com/julmot/mark.js/master/dist/jquery.mark.min.js'></script>
+
+
+    <link rel="icon" type="image/x-icon" href="{% static '/ocr_and_translation/favicon.ico' %}"/>
+    <!--        <link rel="stylesheet" href="static/css/summarizer.css">-->
+    <link rel="stylesheet" href="https://pwcappkit-static.azureedge.net/cdn/release/3.0.0/vendor.min.css">
+    <link rel="stylesheet" href="https://pwcappkit-static.azureedge.net/cdn/release/3.0.0/appkit.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap4.min.css">
+
+
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+          integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+<!--    <script src="{% static 'ocr_and_translation/script.js' %}"></script>-->
+</head>
+
+<body>
+
+<!-- partial:index.partial.html -->
+{% include "layout/header.html" %}
+<div class="container pt-5">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <form class="row">
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label for="keyword">Keywords to be highlighted:</label>
+                        <input type="text" class="form-control" value="Lorem" name="keyword" id="keyword">
+                    </div>
+                    <button type="button" class="btn btn-primary btn-sm" name="perform">Highlight keywords</button>
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label for="accuracy">Accuracy:</label>
+                        <select class="form-control" name="accuracy" id="accuracy">
+                            <option value="exactly">exactly</option>
+                            <option value="partially" selected>partially</option>
+                            <option value="complementary">complementary</option>
+                        </select>
+                    </div>
+
+                    <!--                    <div class="form-check mb-2">-->
+                    <!--                        <input class="form-check-input" type="checkbox" value="true" id="diacritics">-->
+                    <!--                        <label class="form-check-label" for="diacritics">-->
+                    <!--                            Activate Diacritics Recognition-->
+                    <!--                        </label>-->
+                    <!--                    </div>-->
+
+                    <div class="form-group">
+                        <label for="diacritics" class="noTransform"></label>
+                        <input type="checkbox" value="true"
+                               name="diacritics" id="diacritics" checked>Activate
+                        Diacritics Recognition
+                    </div>
+                </div>
+            </form>
+        </div>
+
+
+    </div>
+</div>
+<!-- partial -->
+
+
+<div class="container-xl px-2" style="color:#000000;font-family:'Calibri'">
+
+    <a role="button" href="{{ csv_link }}" class="a-btn a-btn-primary a-btn-md w-8">Download Table in CSV format</a>
+    <table class="table table-striped table-bordered" id="data_table">
+        <thead class="thead-dark">
+        <tr>
+            <th style="min-width: 200px;">Sr no.</th>
+            <th>Page</th>
+            <th>Description</th>
+            <th>Translated Text</th>
+            <th> Thumbnail</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for index, row in table.iterrows %}
+        <tr class="context">
+            <td>{{ forloop.counter }}</td>
+            <td>
+                <a href="{{ row.Page }}" target="_blank">
+                    {{ row.Page }}
+                </a>
+
+            </td>
+            <td>{{ row.description }}</td>
+            <td>{{ row.translated_text }}</td>
+
+            <td><a href="{{row.drive_link}}">
+                <img src="/media/screenshots/{{row.link_to_image}}">
+            </a>
+            </td>
+        </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
+</div>
+</body>
+<script>
+    $(function() {
+        var $context = $(".context");
+        var $form = $("form");
+        var $button = $form.find("button[name='perform']");
+
+        var mark = function() {
+
+            // Read the keyword
+            var searchTerm = $("input[name='keyword']").val();
+
+            // Determine selected options
+            var options = {};
+            var values = $form.serializeArray();
+            values = values.concat(
+            $form.find("input[type='checkbox']:not(:checked)").map(
+                function() {
+                return {
+                    "name": this.name,
+                    "value": "false"
+                }
+                }).get()
+            );
+            $.each(values, function(i, opt){
+            var key = opt.name;
+            var val = opt.value;
+            if(key === "keyword" || !val){
+                return;
+            }
+            if(val === "false"){
+                val = false;
+            } else if(val === "true"){
+                val = true;
+            }
+            options[key] = val;
+            });
+
+
+            var instance = new Mark($context);
+            instance.unmark();
+            instance.mark(searchTerm, options);
+        };
+
+        $button.on("click.perform", mark);
+   });
+
+</script>
+</html>

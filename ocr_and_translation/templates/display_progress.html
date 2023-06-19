@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="icon" type="image/x-icon" href="{% static '/ocr_and_translation/favicon.ico' %}"/>
+    <link rel="stylesheet" href="{% static '/ocr_and_translation/style.css' %}">
+    <link rel="stylesheet" href="https://pwcappkit-static.azureedge.net/cdn/release/3.0.0/vendor.min.css">
+    <link rel="stylesheet" href="https://pwcappkit-static.azureedge.net/cdn/release/3.0.0/appkit.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+            crossorigin="anonymous"></script>
+    <script>
+      $(document).ready(function(){
+        var processingUrl =  "";
+        setInterval(function () {
+
+          $.ajax({
+            type:"GET",
+            url:"{% url 'get_task_update' task_id %}",
+            success: function (data) {
+              if(data["info"] !== null){
+                $("#progress").attr("aria-valuenow",`${(data["info"]["done"]/data["info"]["total"])*100}`)
+                $("#progress").css("width",`${(data["info"]["done"]/data["info"]["total"])*100}%`)
+
+                $("#info").html(`<div>Processed ${data["info"]["done"]} url(s) of total ${data["info"]["total"]} url(s)</div>`)
+                if(data["info"]["url"] !== undefined){
+                  processingUrl = data["info"]["url"];
+                }
+                $("#info").append(`<div>Processing ${processingUrl}...<br>`)
+              }
+
+              if(data["state"] == "SUCCESS"){
+                var name = data['file_name'];
+                console.log(name);
+                window.location = "/get_table/";
+              }
+              console.log(data["state"],data['info']);
+
+            },
+            error: function (error,text,xhr) {
+              console.log(text+"/"+error);
+            }
+          })
+
+        },7000)
+      })
+    </script>
+</head>
+
+
+<body class="no-outline">
+{% include "layout/header.html" %}
+<div class="progress mt-5" id="progress_div" style="width: 80%; margin: auto">
+    <div class="progress-bar" style="width: 0%" id="progress" role="progressbar" aria-valuenow="0" aria-valuemin="0"
+         aria-valuemax="100"></div>
+
+</div>
+
+<div id="info" class="mt-3" style="width: 80%; margin: auto"></div>
+
+
+<div class="a-template-content a-bg-f5f" id="hfn-content-container">
+    <div class="container" style="max-width: 1200px!important;">
+
+        <div class="row d-flex">
+            <div class="col-12 d-table">
+                <div class="a-panel a-m-20">
+                    <div class="a-panel-header"><span>Wait for Transfer Pricing Web Scraper to process all the company websites.</span>
+                    </div>
+                    <div class="a-pb-20 a-pt-10 mw-100-percent overflow-hidden">
+                        <div class="a-font-16">
+                            <br/>
+                            <img src="{% static 'yellow.gif'%}"
+                                 style="display: block; margin-left: auto; margin-right: auto; width=30%">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+</body>
+
+</html>
