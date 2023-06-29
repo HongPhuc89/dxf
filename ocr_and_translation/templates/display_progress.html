@@ -90,6 +90,19 @@
 
     </div>
 </div>
+<script>
+  window.addEventListener('beforeunload', function(event) {
+    // Cancel the event
+    event.preventDefault();
+    // Chrome requires returnValue to be set
+    event.returnValue = '';
+    
+    // Custom warning message
+    var warningMessage = 'Are you sure you want to leave this page?';
+    
+    // Display the warning dialog
+    return warningMessage;
+  });
+</script>
 </body>
-
 </html>
