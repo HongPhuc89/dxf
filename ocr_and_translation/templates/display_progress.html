@@ -42,6 +42,7 @@
               if(data["state"] == "SUCCESS"){
                 var name = data['file_name'];
                 console.log(name);
+                $(window).unbind('beforeunload');
                 window.location = "/get_table/";
               }
               console.log(data["state"],data['info']);
