@@ -69,7 +69,7 @@ class scraper:
 
                 self.driver.get(url)
                 try:
-                    WebDriverWait(self.driver, 20).until(EC.presence_of_element_located((By.TAG_NAME, 'body')))
+                    WebDriverWait(self.driver, 120).until(EC.presence_of_element_located((By.TAG_NAME, 'body')))
                 except TimeoutException:
                     print("Loading took too much time!")
                 task.update_state(state='PROGRESS', meta={'done': pr, 'total': a, 'url': url})
