@@ -1,4 +1,5 @@
 from logging import getLogger
+from pathlib import Path
 from django.shortcuts import render, reverse, redirect
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.core.files.storage import FileSystemStorage
@@ -167,7 +168,9 @@ def get_table(request):
         im = Image.fromarray(im.astype(np.uint8))
         name = re.sub(r'[\W_]+', "", str(timezone.now()))
         # print(name)
-        im.save(settings.MEDIA_ROOT + "/screenshots/permanent/" + name + ".jpg")
+        permanent_path = settings.MEDIA_ROOT + "/screenshots/permanent/"
+        Path(permanent_path).mkdir(parents=True, exist_ok=True)
+        im.save(permanent_path + name + ".jpg")
         dict_["link_to_image"][i] = "permanent/" + name + ".jpg"
 
     if "image_data" in dict_:

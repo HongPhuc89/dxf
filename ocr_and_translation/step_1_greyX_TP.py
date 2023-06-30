@@ -1,10 +1,13 @@
+from math import log
 import os
 import platform
 import re
+from shlex import join
 import sys
 import time
 import traceback
 import urllib
+from pathlib import Path
 from logging import getLogger
 
 import numpy as np
@@ -49,6 +52,7 @@ class scraper:
         self.permanent = settings.STATICFILES_DIRS[0] + '/permanent/'
 
         self.tmp = settings.MEDIA_ROOT + '/screenshots/tmp/'
+        Path(self.permanent).mkdir(parents=True, exist_ok=True)        
         if not os.path.exists(self.directory):
             os.makedirs(self.directory)
             os.makedirs(self.full)
@@ -182,11 +186,12 @@ class scraper:
 
         t_s = re.sub(r'[\W_]+', '', str(timezone.now()))
         full_name = f"{kos}_{t_s}.jpg"
-        stitched_image.save(f"{self.full}/{full_name}")
+        stitched_image.save(os.path.join(self.full, full_name))
 
         stitched_image = stitched_image.resize((100, 100))
         per_name = re.sub(r'[\W_]+', '', str(timezone.now())) + ".jpg"
-        stitched_image.save(f"{self.permanent}/{per_name}")
+        logger.warning(f"per_name = {per_name}, permanent = {self.permanent}")
+        stitched_image.save(os.path.join(self.permanent, per_name))
 
         name = f"{kos},{fname}"
 
@@ -318,6 +323,16 @@ def clear_full():
         os.remove(dirPath + "/" + fileName)
 
 
+def export_fail_url_list(name, url):
+    failed_file_path = os.path.join(settings.MEDIA_ROOT, f"fail_{name}")
+    with open(failed_file_path, "a") as f:
+        f.write(f"{url}\n")
+
+def handle_fail_scraper(name, url, exc):
+    logger.warning(f"ERROR | Can not scape URL: {url}, error={exc}")
+    traceback.print_exc(file=sys.stdout)
+    export_fail_url_list(name=name, url=url)
+
 def scrap_the_file(name, gauth, task):
     pr = 0
     def get_name(split):
@@ -353,8 +368,9 @@ def scrap_the_file(name, gauth, task):
                 w.start(url, gauth, task, pr, len(a.splitlines()),name_of_folder)
                 w.clear_tmp()
             except Exception as exc:
-                logger.warning(f"ERROR | {exc}")
-                traceback.print_exc(file=sys.stdout)
+                handle_fail_scraper(name=name,
+                                    url=url,
+                                    exc=exc)
             finally:
                 driver.quit()
             pr += 1
@@ -401,8 +417,9 @@ def scrap_the_file(name, gauth, task):
 
                 w.clear_tmp()
             except Exception as exc:
-                logger.warning(f"ERROR | {exc}")
-                traceback.print_exc(file=sys.stdout)
+                handle_fail_scraper(name=name,
+                                    url=url,
+                                    exc=exc)
             finally:
                 driver.quit()
             pr += 1
