@@ -324,7 +324,7 @@ def clear_full():
 
 
 def export_fail_url_list(name, url):
-    failed_file_path = os.path.join(settings.MEDIA_ROOT, f"fail_{name}")
+    failed_file_path = os.path.join(settings.MEDIA_ROOT, f"fail_{name}.csv")
     with open(failed_file_path, "a") as f:
         f.write(f"{url}\n")
 
