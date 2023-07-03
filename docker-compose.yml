@@ -5,18 +5,20 @@ services:
     build: .
     environment:
       CELERY_HOST: redis
+    restart: always
     networks:
       - data-find-network
     ports:
       - "8000:8000"
     volumes:
-      - .:/murmuring
+      - .:/usr/src/app
 
   redis:
     image: 'bitnami/redis:latest'
     container_name: data-findhub-redis
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
+    restart: always
     networks:
       - data-find-network
 
