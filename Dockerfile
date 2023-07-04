@@ -16,9 +16,10 @@ RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.d
 
 WORKDIR /usr/src/app
 RUN chmod +x /usr/src/app
+COPY requirements.txt /usr/src/app
+RUN pip install -r requirements.txt
 COPY . /usr/src/app
 
-RUN pip install -r requirements.txt
 RUN chmod +x /usr/src/app/executable/chromedriver
 RUN chmod +x entrypoint.sh
 CMD [ "/bin/sh", "entrypoint.sh"]
