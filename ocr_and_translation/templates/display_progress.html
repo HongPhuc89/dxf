@@ -42,6 +42,7 @@
               if(data["state"] == "SUCCESS"){
                 var name = data['file_name'];
                 console.log(name);
+                $(window).unbind('beforeunload');
                 window.location = "/get_table/";
               }
               console.log(data["state"],data['info']);
@@ -90,6 +91,19 @@
 
     </div>
 </div>
+<script>
+  window.addEventListener('beforeunload', function(event) {
+    // Cancel the event
+    event.preventDefault();
+    // Chrome requires returnValue to be set
+    event.returnValue = '';
+    
+    // Custom warning message
+    var warningMessage = 'Are you sure you want to leave this page?';
+    
+    // Display the warning dialog
+    return warningMessage;
+  });
+</script>
 </body>
-
 </html>

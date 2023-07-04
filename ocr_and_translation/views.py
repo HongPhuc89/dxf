@@ -1,4 +1,5 @@
 from logging import getLogger
+from pathlib import Path
 from django.shortcuts import render, reverse, redirect
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.core.files.storage import FileSystemStorage
@@ -34,6 +35,11 @@ output_path = settings.MEDIA_ROOT + '/ocr/'
 logger = getLogger(__name__)
 
 gauth = GoogleAuth()
+CSV_REQUIRED_FIELD = {
+    "Company",
+    "Website",
+    "Code",
+}
 
 
 @csrf_exempt
@@ -74,6 +80,17 @@ def upload_form(request):
 
     return render(request, "form_.html")
 
+def is_valid_csv_file(file_stream) -> bool:
+    """Validate input CSV file
+    - Check first line contain required fields
+    """
+    first_line = file_stream.readline().strip()
+    items_splitted = first_line.decode('utf-8').split(",")
+    items = {item.strip() for item in items_splitted}
+    missing_columns = CSV_REQUIRED_FIELD - items
+    file_stream.seek(0)  # Reset cursor
+    logger.warning(f"Found missing columns: {missing_columns}")
+    return not missing_columns
 
 @csrf_exempt
 def uplo_custom(request):
@@ -95,6 +112,9 @@ def uplo_custom(request):
 
         if not (file.name.endswith(".csv") or file.name.endswith(".txt")):
             return render(request, "form_.html", context={"required": "File must be of type .txt or .csv"})
+        
+        if not is_valid_csv_file(file_stream=file):
+            return render(request, "form_.html", context={"required": f"File must be contains fields: {','.join(CSV_REQUIRED_FIELD)}"})
 
         # cred_file = re.sub('[\W_]+', '', "file_{}".format(str(timezone.now())))+".txt"
         cred_file = request.session["cred_file"]
@@ -148,7 +168,9 @@ def get_table(request):
         im = Image.fromarray(im.astype(np.uint8))
         name = re.sub(r'[\W_]+', "", str(timezone.now()))
         # print(name)
-        im.save(settings.MEDIA_ROOT + "/screenshots/permanent/" + name + ".jpg")
+        permanent_path = settings.MEDIA_ROOT + "/screenshots/permanent/"
+        Path(permanent_path).mkdir(parents=True, exist_ok=True)
+        im.save(permanent_path + name + ".jpg")
         dict_["link_to_image"][i] = "permanent/" + name + ".jpg"
 
     if "image_data" in dict_:

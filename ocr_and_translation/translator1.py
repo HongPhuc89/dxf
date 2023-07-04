@@ -17,7 +17,7 @@ def Translator(original):
 	# Provide text that you want to translate:=>
 	print(input1)
 	# launch browser with selenium:=>
-	browser = webdriver.Chrome(CHROMEDRIVER_PATH) #browser = webdriver.Chrome('path of chromedriver.exe file') if the chromedriver.exe is in different folder
+	browser = webdriver.Chrome() #browser = webdriver.Chrome('path of chromedriver.exe file') if the chromedriver.exe is in different folder
 	# copy google Translator link here:=>
 	browser.get("https://translate.google.com")
 	#view=home&op=translate&sl=en&tl="+lang_code)
