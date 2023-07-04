@@ -1,29 +1,25 @@
-from math import log
 import os
-import platform
 import re
-from shlex import join
 import sys
 import time
 import traceback
 import urllib
-from pathlib import Path
 from logging import getLogger
+from pathlib import Path
 
 import numpy as np
 from PIL import Image
 from bs4 import BeautifulSoup
 from django.conf import settings
 from django.utils import timezone
+from googletrans import Translator
 from pydrive2.drive import GoogleDrive
 from selenium import webdriver
-from selenium.common.exceptions import WebDriverException
-# from .google_trans_new import google_translator as Translator
-from googletrans import Translator
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import WebDriverException
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
 from .models import SavedModel
 from .step_2_ocr import main
@@ -346,8 +342,10 @@ def scrap_the_file(name, gauth, task):
         a = f.read()
 
         # for i in ["https://www.devatus.fi"]:
-        task.update_state(state='PROGRESS', meta={'done': 0, 'total': len(a.splitlines())})
-        for i in a.splitlines():
+        request_data = a.splitlines()
+        request_data = request_data[1:]  # Ignore first line
+        task.update_state(state='PROGRESS', meta={'done': 0, 'total': len(request_data)})
+        for i in request_data:
             name_of_folder = get_name(i.split(','))
             if "http" not in i.split(',')[0]:
                 i = "https://" + i.split(',')[0]
