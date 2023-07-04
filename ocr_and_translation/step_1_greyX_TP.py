@@ -52,7 +52,7 @@ class scraper:
         self.permanent = settings.STATICFILES_DIRS[0] + '/permanent/'
 
         self.tmp = settings.MEDIA_ROOT + '/screenshots/tmp/'
-        Path(self.permanent).mkdir(parents=True, exist_ok=True)        
+        Path(self.permanent).mkdir(parents=True, exist_ok=True)
         if not os.path.exists(self.directory):
             os.makedirs(self.directory)
             os.makedirs(self.full)
@@ -324,6 +324,7 @@ def clear_full():
 
 
 def export_fail_url_list(name, url):
+    Path(settings.MEDIA_ROOT).mkdir(parents=True, exist_ok=True)
     failed_file_path = os.path.join(settings.MEDIA_ROOT, f"fail_{name}.csv")
     with open(failed_file_path, "a") as f:
         f.write(f"{url}\n")
