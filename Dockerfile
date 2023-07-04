@@ -19,6 +19,5 @@ RUN chmod +x /usr/src/app
 COPY . /usr/src/app
 
 RUN pip install -r requirements.txt
-RUN chmod +x /usr/src/app/executable/chromedriver
 RUN chmod +x entrypoint.sh
 CMD [ "/bin/sh", "entrypoint.sh"]
