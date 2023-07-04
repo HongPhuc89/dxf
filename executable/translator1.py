@@ -16,7 +16,7 @@ from selenium.webdriver.chrome.options import Options as ChromeOptions
 	input1 = original
 
 	# launch browser with selenium:=>
-	browser = webdriver.Chrome(CHROMEDRIVER_PATH) #browser = webdriver.Chrome('path of chromedriver.exe file') if the chromedriver.exe is in different folder
+	browser = webdriver.Chrome() #browser = webdriver.Chrome('path of chromedriver.exe file') if the chromedriver.exe is in different folder
 
 	# copy google Translator link here:=>
 	browser.get("https://translate.google.com")

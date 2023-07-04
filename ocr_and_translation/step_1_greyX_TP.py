@@ -355,12 +355,7 @@ def scrap_the_file(name, gauth, task):
             options.add_argument('--headless')
             options.add_argument('--no-sandbox')
             options.add_argument('--disable-dev-shm-usage')
-            if platform.system() == "Darwin":
-                driver = webdriver.Chrome(CHROMEDRIVER_PATH, options=options)
-            elif platform.system() == "Windows":
-                driver = webdriver.Chrome(settings.EXECUTABLE_ROOT + "/chromedriver__win.exe", options=options)
-            else:
-                driver = webdriver.Chrome(CHROMEDRIVER_PATH, options=options)
+            driver = webdriver.Chrome(options=options)
 
             try:
                 print("ABOUT TO GET STARTED...")
@@ -393,12 +388,7 @@ def scrap_the_file(name, gauth, task):
             options.add_argument('--no-sandbox')
             options.add_argument('--disable-dev-shm-usage')
             # options.binary_location = GOOGLE_CHROME_PATH
-            if platform.system() == "Darwin":
-                driver = webdriver.Chrome(CHROMEDRIVER_PATH, options=options)
-            elif platform.system() == "Windows":
-                driver = webdriver.Chrome(settings.EXECUTABLE_ROOT + "/chromedriver__win.exe", options=options)
-            else:
-                driver = webdriver.Chrome(CHROMEDRIVER_PATH, options=options)
+            driver = webdriver.Chrome(options=options)
 
             try:
                 print("ABOUT TO GET STARTED...")
