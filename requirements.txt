@@ -16,3 +16,4 @@ celery-progress
 tesserocr
 googletrans-py
 sentry_sdk
+chromedriver-binary-auto
