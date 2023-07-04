@@ -337,18 +337,21 @@ def scrap_the_file(name, gauth, task):
             return split[2]
         return split[1]
 
+    def get_correct_url(url_str):
+        if "http" not in url_str:
+            return f"https://{url_str}"
+        return url_str
+
     if type(name) == str:
         f = open(settings.MEDIA_ROOT + "/" + name)
         a = f.read()
 
         # for i in ["https://www.devatus.fi"]:
         request_data = a.splitlines()
-        request_data = request_data[1:]  # Ignore first line
         task.update_state(state='PROGRESS', meta={'done': 0, 'total': len(request_data)})
         for i in request_data:
             name_of_folder = get_name(i.split(','))
-            if "http" not in i.split(',')[0]:
-                i = "https://" + i.split(',')[0]
+            i = get_correct_url(url_str=i.split(',')[0])
             url = (i)
             options = webdriver.ChromeOptions()
             options.add_argument('--headless')
@@ -378,10 +381,7 @@ def scrap_the_file(name, gauth, task):
         task.update_state(state='PROGRESS', meta={'done': 0, 'total': len(name)})
         for i in name:
             name_of_folder = get_name(i.split(','))
-            i = i.split(',')[0]
-            if "http" not in i:
-                i = "https://" + i
-            url = (i)
+            url = (get_correct_url(url_str=i.split(',')[0]))
             options = webdriver.ChromeOptions()
             options.add_argument('--headless')
             options.add_argument('--no-sandbox')

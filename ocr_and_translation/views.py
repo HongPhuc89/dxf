@@ -124,9 +124,15 @@ def uplo_custom(request):
 
         filename = file_model.file_field.name
         cred_file_ = file_model.cred_file_field.name
+        with open(settings.MEDIA_ROOT + "/" + filename,encoding="utf-8") as f:
+            file_data = f.read().splitlines()
 
-        task = upload_via_celery_home.delay(open(settings.MEDIA_ROOT + "/" + filename,encoding="utf-8").read().splitlines(),
-                                            file_name, open(settings.MEDIA_ROOT + "/" + cred_file_).read())
+        # Ignore first line
+        file_data = file_data[1:]
+
+        task = upload_via_celery_home.delay(file_data,
+                                            file_name,
+                                            open(settings.MEDIA_ROOT + "/" + cred_file_).read())
         file_model.delete()
 
         cred_file = request.session["cred_file"]
