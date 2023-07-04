@@ -345,8 +345,8 @@ def scrap_the_file(name, gauth, task):
         a = f.read()
 
         # for i in ["https://www.devatus.fi"]:
-        task.update_state(state='PROGRESS', meta={'done': 0, 'total': len(a.splitlines()) - 1})
-        for i in a.splitlines()[1:]:
+        task.update_state(state='PROGRESS', meta={'done': 0, 'total': len(a.splitlines())})
+        for i in a.splitlines():
             name_of_folder = get_name(i.split(','))
             if "http" not in i.split(',')[0]:
                 i = "https://" + i.split(',')[0]
